@@ -13,6 +13,7 @@ class MazeChar {
     enum class State { Waiting, Walking };
 
     MazeChar(double x, double y);
+    virtual ~MazeChar() {}
 
     void move(Direction dir);
     void stop();
