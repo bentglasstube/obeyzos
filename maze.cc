@@ -13,7 +13,7 @@ Maze::Maze(unsigned long seed, int width, int height) : rng_(seed), width_(width
   std::uniform_int_distribution<int> rx(0, width_ - 1);
   std::uniform_int_distribution<int> ry(0, height_ - 1);
 
-  breakup_ = width * height / 5;
+  breakup_ = width * height / 2;
 
   // start at a random position in the maze
   frontier_.push({rx(rng_), ry(rng_)});

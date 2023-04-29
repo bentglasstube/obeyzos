@@ -39,9 +39,10 @@ class Warehouse {
         bool occludes() const {
           switch (value_) {
             case Open:
-            case Entrance:
             case WallFace:
             case Shelf:
+            case Elevator:
+            case Entrance:
               return false;
             default:
               return true;
@@ -73,7 +74,7 @@ class Warehouse {
     static constexpr int pixel_width() { return kMapWidth * Config::kTileSize; }
     static constexpr int pixel_height() { return kMapHeight * Config::kTileSize; }
 
-    static constexpr int kMazeSize = 5;
+    static constexpr int kMazeSize = 15;
     static constexpr int kMapWidth = 3 * kMazeSize + 1;
     static constexpr int kMapHeight = 4 * kMazeSize + 1;
 

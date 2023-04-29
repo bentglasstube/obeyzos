@@ -37,8 +37,10 @@ cc_library(
   deps = [
     "@libgam//:screen",
     "@libgam//:text",
-    ":warehouse",
+    ":camera",
+    ":dialog",
     ":maze_player",
+    ":warehouse",
   ],
 )
 
@@ -84,4 +86,23 @@ cc_library(
   ],
 )
 
+cc_library(
+  name = "camera",
+  srcs = ["camera.cc"],
+  hdrs = ["camera.h"],
+  deps = [
+    "@libgam//:rect",
+    ":config",
+  ],
+)
 
+cc_library(
+  name = "dialog",
+  srcs = ["dialog.cc"],
+  hdrs = ["dialog.h"],
+  deps = [
+    "@libgam//:box",
+    "@libgam//:text",
+    ":config",
+  ],
+)

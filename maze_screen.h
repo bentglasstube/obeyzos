@@ -3,6 +3,8 @@
 #include "screen.h"
 #include "text.h"
 
+#include "camera.h"
+#include "dialog.h"
 #include "maze_player.h"
 #include "warehouse.h"
 
@@ -21,6 +23,6 @@ class MazeScreen : public Screen {
     Text text_;
     Warehouse warehouse_;
     MazePlayer player_;
-
-
+    Camera camera_;
+    Dialog dialog_;
 };

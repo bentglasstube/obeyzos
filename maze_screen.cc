@@ -2,9 +2,24 @@
 
 #include "util.h"
 
-MazeScreen::MazeScreen() : text_("text.png"), warehouse_(Util::random_seed()) {}
+MazeScreen::MazeScreen() : text_("text.png"), warehouse_(Util::random_seed()) {
+  camera_.snap(player_.draw_box());
+}
 
 bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+  if (dialog_) {
+    dialog_.update(elapsed);
+    if (input.key_pressed(Input::Button::A)) {
+      if (dialog_.done()) {
+        dialog_.dismiss();
+      } else {
+        dialog_.finish();
+      }
+    }
+
+    return true;
+  }
+
   if (input.key_held(Input::Button::Left)) {
     player_.move(Direction::West);
   } else if (input.key_held(Input::Button::Right)) {
@@ -23,14 +38,15 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     switch (c.tile) {
       case Warehouse::Tile::Elevator:
         // TODO go up
-        break;
+        return false;
 
       case Warehouse::Tile::Shelf:
-        // TODO talk about boxes
+        dialog_.set_message("Look at all this junk.");
         break;
 
       case Warehouse::Tile::WallFace:
-        // TODO check sprite and talk about anti-union posters
+        // Only sprites above 8 have "posters"
+        if (c.sprite > 8) dialog_.set_message("More anti-union propaganda.");
         break;
 
       default: // Other tiles do nothing interesting
@@ -42,6 +58,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   // TODO handle busters
 
   player_.update(warehouse_, elapsed);
+  camera_.update(player_.draw_box(), elapsed);
 
   const int px = std::floor(player_.x() / Config::kTileSize);
   const int py = std::floor(player_.y() / Config::kTileSize);
@@ -51,8 +68,12 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 }
 
 void MazeScreen::draw(Graphics& graphics) const {
-  warehouse_.draw(graphics, 0, 0);
-  player_.draw(graphics, 0, 0);
+  const int xo = std::floor(camera_.xoffset());
+  const int yo = std::floor(camera_.yoffset());
+
+  warehouse_.draw(graphics, xo, yo);
+  player_.draw(graphics, xo, yo);
+  if (dialog_) dialog_.draw(graphics);
 }
 
 Screen* MazeScreen::next_screen() const {
