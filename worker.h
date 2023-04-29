@@ -29,7 +29,6 @@ class Worker : public MazeChar {
     int walk_time() { return std::uniform_int_distribution<int>(kMinWalkTime, kMaxWalkTime)(rng_); }
 
     std::mt19937 rng_;
-    double tx_, ty_;
     int wait_timer_;
     int visual_;
     bool unionized_;
