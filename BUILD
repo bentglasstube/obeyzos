@@ -41,6 +41,7 @@ cc_library(
     ":dialog",
     ":maze_player",
     ":warehouse",
+    ":worker",
   ],
 )
 
@@ -115,5 +116,15 @@ cc_library(
     ":warehouse",
     ":config",
     ":direction",
+  ]
+)
+
+cc_library(
+  name = "worker",
+  srcs = ["worker.cc"],
+  hdrs = ["worker.h"],
+  deps = [
+    "@libgam//:spritemap",
+    ":maze_char",
   ]
 )

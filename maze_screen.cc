@@ -2,8 +2,20 @@
 
 #include "util.h"
 
-MazeScreen::MazeScreen() : text_("text.png"), warehouse_(Util::random_seed()) {
-  camera_.snap(player_.draw_box());
+MazeScreen::MazeScreen() :
+  rng_(Util::random_seed()),
+  text_("text.png"),
+  warehouse_(rng_()),
+  camera_(player_.draw_box())
+{
+  // add workers
+  for (int i = 0; i < 10; ++i) {
+    auto p = warehouse_.random_open_cell(rng_);
+    workers_.emplace_back(
+        rng_(),
+        p.first * Config::kTileSize + Config::kTileSize / 2,
+        p.second * Config::kTileSize + Config::kTileSize / 2);
+  }
 }
 
 bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
@@ -19,6 +31,10 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
     return true;
   }
+
+#ifndef NDEBUG
+  if (input.key_pressed(Input::Button::Select)) cheater_mode_ = !cheater_mode_;
+#endif
 
   if (input.key_held(Input::Button::Left)) {
     player_.move(Direction::West);
@@ -54,8 +70,11 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  // TODO handle workers
   // TODO handle busters
+
+  for (auto& worker : workers_) {
+    worker.update(warehouse_, elapsed);
+  }
 
   player_.update(warehouse_, elapsed);
   camera_.update(player_.draw_box(), elapsed);
@@ -71,8 +90,17 @@ void MazeScreen::draw(Graphics& graphics) const {
   const int xo = std::floor(camera_.xoffset());
   const int yo = std::floor(camera_.yoffset());
 
+#ifndef NDEBUG
+  warehouse_.draw(graphics, xo, yo, cheater_mode_);
+#else
   warehouse_.draw(graphics, xo, yo);
+#endif
   player_.draw(graphics, xo, yo);
+  for (auto worker : workers_) {
+    if (warehouse_.box_visible(worker.collision_box())) {
+      worker.draw(graphics, xo, yo);
+    }
+  }
   if (dialog_) dialog_.draw(graphics);
 }
 

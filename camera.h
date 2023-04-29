@@ -6,6 +6,7 @@ class Camera {
   public:
 
     Camera();
+    Camera(const Rect& focus) { snap(focus); }
 
     void update(const Rect& focus, unsigned int elapsed);
     void snap(const Rect& focus);

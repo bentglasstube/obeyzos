@@ -61,15 +61,31 @@ class Warehouse {
 
     Warehouse(unsigned long seed);
 
-    void draw(Graphics& graphics, int xo, int yo) const;
+    void draw(Graphics& graphics, int xo, int yo, bool show_all=false) const;
     void generate(unsigned long seed);
 
-    bool box_walkable(const Rect& r) const;
+    bool box_walkable(const Rect& r, double dx, double dy) const;
+    bool box_walkable(const Rect& r) const { return box_walkable(r, 0, 0); }
     bool walkable(double px, double py) const;
+    bool box_visible(const Rect& r) const;
 
     void calculate_visibility(int x, int y);
     Tile get_tile(int x, int y) const;
     Cell get_cell(int x, int y) const;
+
+    template <class Generator> std::pair<int, int> random_open_cell(Generator& g) const {
+      std::uniform_int_distribution<int> rx(1, kMapWidth - 2);
+      std::uniform_int_distribution<int> ry(2, kMapHeight - 2);
+
+      while (true) {
+        int x = rx(g);
+        int y = ry(g);
+
+        if (get_tile(x, y) == Tile::Open) {
+          return std::make_pair(x, y);
+        }
+      }
+    }
 
     static constexpr int pixel_width() { return kMapWidth * Config::kTileSize; }
     static constexpr int pixel_height() { return kMapHeight * Config::kTileSize; }

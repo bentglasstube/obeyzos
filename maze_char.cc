@@ -8,7 +8,6 @@ MazeChar::MazeChar(double x, double y) :
   x_(x), y_(y),
   facing_(Direction::North),
   state_(State::Waiting),
-  sprites_("maze_player.png", 4, 16, 24),
   timer_(0) {}
 
 void MazeChar::move(Direction dir) {
@@ -22,7 +21,7 @@ void MazeChar::stop() {
 
 void MazeChar::update(const Warehouse& warehouse, unsigned int elapsed) {
   if (state_ == State::Walking) {
-    const double delta = kSpeed * elapsed;
+    const double delta = speed() * elapsed;
     double dx = 0, dy = 0;
     switch (facing_) {
       case Direction::North: dy = -delta; break;
@@ -31,7 +30,9 @@ void MazeChar::update(const Warehouse& warehouse, unsigned int elapsed) {
       case Direction::West:  dx = -delta; break;
     }
 
-    if (move_if_possible(warehouse, dx, dy)) {
+    if (!collision(warehouse, dx, dy)) {
+      x_ += dx;
+      y_ += dy;
       timer_ = (timer_ + elapsed) % (kAnimationTime * 4);
     }
   }
@@ -40,7 +41,7 @@ void MazeChar::update(const Warehouse& warehouse, unsigned int elapsed) {
 void MazeChar::draw(Graphics& graphics, int xo, int yo) const {
   const int x = x_ - xo - Config::kTileSize / 2;
   const int y = y_ - yo - Config::kTileSize;
-  sprites_.draw(graphics, sprite_number(), x, y);
+  sprites().draw(graphics, sprite_number(), x, y);
 
 #ifndef NDEBUG
   collision_box().draw(graphics, xo, yo, 0xd8ff00ff, false);
@@ -69,21 +70,8 @@ void MazeChar::set_position(int x, int y) {
   stop();
 }
 
-bool MazeChar::move_if_possible(const Warehouse& warehouse, double dx, double dy) {
-  x_ += dx;
-  y_ += dy;
-
-  if (collision(warehouse)) {
-    x_ -= dx;
-    y_ -= dy;
-    return false;
-  } else {
-    return true;
-  }
-}
-
-bool MazeChar::collision(const Warehouse& warehouse) const {
-  return !warehouse.box_walkable(collision_box());
+bool MazeChar::collision(const Warehouse& warehouse, double dx, double dy) const {
+  return !warehouse.box_walkable(collision_box(), dx, dy);
 }
 
 int MazeChar::sprite_number() const {

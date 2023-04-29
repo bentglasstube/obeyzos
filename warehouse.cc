@@ -8,14 +8,14 @@ Warehouse::Warehouse(unsigned long seed) :
   generate(seed);
 }
 
-void Warehouse::draw(Graphics& graphics, int xo, int yo) const {
+void Warehouse::draw(Graphics& graphics, int xo, int yo, bool show_all) const {
   for (int y = 0; y < kMapHeight; ++y) {
     for (int x = 0; x < kMapWidth; ++x) {
       const Cell c = cells_[index(x, y)];
       const Graphics::Point a = {x * Config::kTileSize - xo, y * Config::kTileSize - yo};
       const Graphics::Point b = {a.x + Config::kTileSize, a.y + Config::kTileSize};
 
-      if (c.seen) {
+      if (show_all || c.seen) {
         tiles_.draw(graphics, c.sprite, a.x, a.y);
         if (!c.visible) graphics.draw_rect(a, b, 0x00000080, true);
       }
@@ -80,17 +80,29 @@ void Warehouse::generate(unsigned long seed) {
   pick_all_sprites();
 }
 
-bool Warehouse::box_walkable(const Rect& r) const {
-  return walkable(r.left, r.top) &&
-    walkable(r.left, r.bottom) &&
-    walkable(r.right, r.top) &&
-    walkable(r.right, r.bottom);
+bool Warehouse::box_walkable(const Rect& r, double dx, double dy) const {
+  return walkable(r.left + dx, r.top + dy) &&
+    walkable(r.left + dx, r.bottom + dy) &&
+    walkable(r.right + dx, r.top + dy) &&
+    walkable(r.right + dx, r.bottom + dy);
 }
 
 bool Warehouse::walkable(double px, double py) const {
   const int x = std::floor(px / Config::kTileSize);
   const int y = std::floor(py / Config::kTileSize);
   return !get_tile(x, y).obstructs();
+}
+
+bool Warehouse::box_visible(const Rect& r) const {
+  const int top = std::floor(r.top / Config::kTileSize);
+  const int left = std::floor(r.left / Config::kTileSize);
+  const int right = std::floor(r.right / Config::kTileSize);
+  const int bottom = std::floor(r.bottom / Config::kTileSize);
+
+  return get_cell(left, top).visible ||
+         get_cell(right, top).visible ||
+         get_cell(left, bottom).visible ||
+         get_cell(right, bottom).visible;
 }
 
 namespace {

@@ -14,5 +14,9 @@ class MazePlayer : public MazeChar {
 
   private:
 
+    static constexpr double kSpeed = 0.075;
+    double speed() const override { return kSpeed; }
+
     SpriteMap sprites_;
+    SpriteMap sprites() const override { return sprites_; }
 };

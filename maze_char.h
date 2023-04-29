@@ -17,8 +17,8 @@ class MazeChar {
     void move(Direction dir);
     void stop();
 
-    void update(const Warehouse& warehouse, unsigned int elapased);
-    void draw(Graphics& graphics, int xo, int yo) const;
+    virtual void update(const Warehouse& warehouse, unsigned int elapased);
+    virtual void draw(Graphics& graphics, int xo, int yo) const;
 
     Rect draw_box() const;
     Rect collision_box() const;
@@ -30,16 +30,16 @@ class MazeChar {
 
   protected:
 
-    static constexpr double kSpeed = 0.075;
     static constexpr int kAnimationTime = 125;
 
     double x_, y_;
     Direction facing_;
     State state_;
-    SpriteMap sprites_;
     int timer_;
 
-    bool move_if_possible(const Warehouse& warehouse, double dx, double dy);
-    bool collision(const Warehouse& warehouse) const;
-    int sprite_number() const;
+    bool collision(const Warehouse& warehouse, double dx, double dy) const;
+    virtual int sprite_number() const;
+
+    virtual SpriteMap sprites() const = 0;
+    virtual double speed() const = 0;
 };
