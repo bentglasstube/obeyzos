@@ -77,12 +77,9 @@ cc_library(
   srcs = ["maze_player.cc"],
   hdrs = ["maze_player.h"],
   deps = [
-    "@libgam//:graphics",
-    "@libgam//:rect",
     "@libgam//:spritemap",
+    ":maze_char",
     ":warehouse",
-    ":config",
-    ":direction",
   ],
 )
 
@@ -105,4 +102,18 @@ cc_library(
     "@libgam//:text",
     ":config",
   ],
+)
+
+cc_library(
+  name = "maze_char",
+  srcs = ["maze_char.cc"],
+  hdrs = ["maze_char.h"],
+  deps = [
+    "@libgam//:graphics",
+    "@libgam//:rect",
+    "@libgam//:spritemap",
+    ":warehouse",
+    ":config",
+    ":direction",
+  ]
 )
