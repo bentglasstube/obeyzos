@@ -11,6 +11,7 @@ class MazePlayer : public MazeChar {
     MazePlayer();
 
     Warehouse::Cell interact(const Warehouse& warehouse) const;
+    Rect target() const;
 
   private:
 

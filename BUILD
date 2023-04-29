@@ -39,6 +39,7 @@ cc_library(
     "@libgam//:text",
     ":camera",
     ":dialog",
+    ":game_state",
     ":maze_player",
     ":warehouse",
     ":worker",
@@ -127,4 +128,9 @@ cc_library(
     "@libgam//:spritemap",
     ":maze_char",
   ]
+)
+
+cc_library(
+  name = "game_state",
+  hdrs = ["game_state.h"],
 )

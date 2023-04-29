@@ -12,6 +12,8 @@ class Worker : public MazeChar {
     Worker(unsigned long seed, double x, double y);
 
     void update(const Warehouse& warehouse, unsigned int elapsed) override;
+    void unionize() { unionized_ = true; }
+    bool is_unionized() const { return unionized_; }
 
   private:
 
@@ -30,4 +32,5 @@ class Worker : public MazeChar {
     double tx_, ty_;
     int wait_timer_;
     int visual_;
+    bool unionized_;
 };

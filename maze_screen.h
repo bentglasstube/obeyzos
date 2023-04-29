@@ -8,6 +8,7 @@
 
 #include "camera.h"
 #include "dialog.h"
+#include "game_state.h"
 #include "maze_player.h"
 #include "warehouse.h"
 #include "worker.h"
@@ -15,7 +16,7 @@
 class MazeScreen : public Screen {
   public:
 
-    MazeScreen();
+    MazeScreen(GameState gs);
 
     bool update(const Input&, Audio&, unsigned int) override;
     void draw(Graphics&) const override;
@@ -24,6 +25,7 @@ class MazeScreen : public Screen {
 
   private:
 
+    GameState gs_;
     std::mt19937 rng_;
 
 #ifndef NDEBUG
@@ -36,4 +38,6 @@ class MazeScreen : public Screen {
     Camera camera_;
     Dialog dialog_;
     std::vector<Worker> workers_;
+
+    int union_workers() const;
 };

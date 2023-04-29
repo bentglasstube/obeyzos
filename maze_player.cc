@@ -21,3 +21,13 @@ Warehouse::Cell MazePlayer::interact(const Warehouse& warehouse) const {
 
   return warehouse.get_cell(px, py);
 }
+
+Rect MazePlayer::target() const {
+  const Rect box = draw_box();
+  return Rect{
+      box.left   + facing_.dx() * Config::kTileSize,
+      box.top    + facing_.dy() * Config::kTileSize,
+      box.right  + facing_.dx() * Config::kTileSize,
+      box.bottom + facing_.dy() * Config::kTileSize,
+  };
+}

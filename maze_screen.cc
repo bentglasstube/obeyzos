@@ -2,7 +2,8 @@
 
 #include "util.h"
 
-MazeScreen::MazeScreen() :
+MazeScreen::MazeScreen(GameState gs) :
+  gs_(gs),
   rng_(Util::random_seed()),
   text_("text.png"),
   warehouse_(rng_()),
@@ -19,6 +20,8 @@ MazeScreen::MazeScreen() :
 }
 
 bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+  gs_.add_time(elapsed);
+
   if (dialog_) {
     dialog_.update(elapsed);
     if (input.key_pressed(Input::Button::A)) {
@@ -49,6 +52,17 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   }
 
   if (input.key_pressed(Input::Button::A)) {
+    for (auto& worker : workers_) {
+      if (worker.draw_box().intersect(player_.target())) {
+        if (worker.is_unionized()) {
+          dialog_.set_message("I'm already in the union.");
+        } else {
+          dialog_.set_message("Yes, I'd love to join the union.");
+          worker.unionize();
+          ++gs_.workers;
+        }
+      }
+    }
     const Warehouse::Cell c = player_.interact(warehouse_);
 
     switch (c.tile) {
@@ -102,6 +116,9 @@ void MazeScreen::draw(Graphics& graphics) const {
     }
   }
   if (dialog_) dialog_.draw(graphics);
+
+  text_.draw(graphics, "Workers: " + std::to_string(gs_.workers), 0, 0);
+  text_.draw(graphics, gs_.clock(), graphics.width(), 0, Text::Alignment::Right);
 }
 
 Screen* MazeScreen::next_screen() const {
