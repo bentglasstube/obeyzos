@@ -15,5 +15,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new PuzzleScreen(GameState());
+  return new MazeScreen(GameState());
 }

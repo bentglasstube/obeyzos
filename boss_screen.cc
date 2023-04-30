@@ -9,11 +9,24 @@ BossScreen::BossScreen(GameState gs) :
   text_("text.png"),
   bar_(1000.0, kConfig.graphics.width),
   coins_("coins.png", 4, 16, 16),
-  negotiations_(0), neg_timer_(0)
+  negotiations_(0), neg_timer_(0),
+  dialog_index_(0)
 {}
 
 bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   gs_.add_time(elapsed);
+
+  if (dialog_) {
+    dialog_.update(input, elapsed);
+    return true;
+  } else {
+    if (dialog_index_ < kIntroText.size()) {
+      dialog_.set_message(kIntroText[dialog_index_]);
+      ++dialog_index_;
+      return true;
+    }
+  }
+
   bozos_.update(elapsed);
   for (auto& bullet : bullets_) {
     bullet.update(elapsed);
@@ -49,13 +62,13 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   if (bozos_.attack_ready()) {
     int roll = std::uniform_int_distribution<int>(1, 10)(rng_);
     if (roll <= 4) {
-      waves_.push_back(new CopperWave{100, 1, rng_()});
+      waves_.push_back(new CopperWave{rng_()});
     } else if (roll <= 7) {
-      waves_.push_back(new SilverWave{100, rng_()});
+      waves_.push_back(new SilverWave{rng_()});
     } else if (roll <= 9) {
-      waves_.push_back(new GoldWave{100});
+      waves_.push_back(new GoldWave{});
     } else {
-      waves_.push_back(new EmeraldWave{100, 0.2});
+      waves_.push_back(new EmeraldWave{rng_()});
       bozos_.open_mouth();
     }
 
@@ -98,6 +111,8 @@ void BossScreen::draw(Graphics& graphics) const {
   text_.draw(graphics, gs_.clock(), graphics.width(), 0, Text::Alignment::Right);
   text_.draw(graphics, "Negotiations", graphics.width() / 2, graphics.height() - 32, Text::Alignment::Center);
   bar_.draw(graphics, 0, graphics.height() - 12, negotiations_);
+
+  if (dialog_) dialog_.draw(graphics);
 }
 
 Screen* BossScreen::next_screen() const {
@@ -210,3 +225,16 @@ void BossScreen::Player::draw(Graphics& graphics) const {
 void BossScreen::Player::hurt() {
   iframes_ = 1500;
 }
+
+const std::vector<std::string> BossScreen::kIntroText = {
+  //-----------------------------------------//
+  "Hey, peasant!  What do you think you're\n"
+  "doing in here?  Don't you have quotas to\n"
+  "meet or something?",
+
+  "I've gathered the workers and we are here\n"
+  "to negotiate for better working conditions.",
+
+  "HA! HA! HA! HA! I will crush your puny\n"
+  "UNION with my MASSIVE WEALTH.",
+};

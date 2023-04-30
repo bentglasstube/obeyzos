@@ -28,9 +28,11 @@ class MazeScreen : public Screen {
 
     static constexpr int kNumWorkers = 10;
     static constexpr int kNumBusters = 3;
+    static const std::vector<std::string> kIntroText;
 
     GameState gs_;
     std::mt19937 rng_;
+    size_t dialog_index_;
 
 #ifndef NDEBUG
     bool cheater_mode_ = false;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <random>
+#include <string>
 #include <vector>
 
 #include "rect.h"
@@ -10,6 +11,7 @@
 
 #include "bar.h"
 #include "bozos.h"
+#include "dialog.h"
 #include "direction.h"
 #include "game_state.h"
 
@@ -27,6 +29,7 @@ class BossScreen : public Screen {
 
     static constexpr double kBulletSpeed = 50.0;
     static constexpr int kNegotiationTick = 100;
+    static const std::vector<std::string> kIntroText;
 
     struct Bullet {
       enum class Color { Copper, Silver, Gold, Emerald };
@@ -60,28 +63,31 @@ class BossScreen : public Screen {
     class CopperWave : public Wave {
       // sprays from nose
       public:
-        CopperWave(int count, double spread, unsigned long seed) : Wave(5, count), spread_(spread), rng_(seed) {}
+        CopperWave(unsigned long seed) :
+          Wave(5, 50),
+          rng_(seed),
+          spread_(std::uniform_real_distribution<double>(0.738, 1.232)(rng_)) {}
         Bullet fire(const Bozos& bozos);
 
       private:
-        const double spread_;
         std::mt19937 rng_;
+        const double spread_;
     };
 
     class SilverWave : public Wave {
       // shoots randomly out of alternating ears
       public:
-        SilverWave(int count, unsigned long seed) : Wave(100, count), side_(false), rng_(seed) {}
+        SilverWave(unsigned long seed) : Wave(100, 100), rng_(seed), side_(false) {}
         Bullet fire(const Bozos& bozos);
       private:
-        bool side_;
         std::mt19937 rng_;
+        bool side_;
     };
 
     class GoldWave : public Wave {
       // shoots "lasers" from eyes
       public:
-        GoldWave(int count) : Wave(40, count), side_(false) {}
+        GoldWave() : Wave(40, 250), side_(false) {}
         Bullet fire(const Bozos& bozos);
       private:
         bool side_;
@@ -90,9 +96,14 @@ class BossScreen : public Screen {
     class EmeraldWave : public Wave {
       // shoots spirals from mouth
       public:
-        EmeraldWave(int count, double rotation) : Wave(100, count), rotation_(rotation), angle_(0) {}
+        EmeraldWave(unsigned long seed) :
+          Wave(100, 200),
+          rng_(seed),
+          rotation_(std::uniform_real_distribution<double>(0.173, 0.291)(rng_)),
+          angle_(0) {}
         Bullet fire(const Bozos& bozos);
       private:
+        std::mt19937 rng_;
         const double rotation_;
         double angle_;
     };
@@ -132,6 +143,7 @@ class BossScreen : public Screen {
     Bar bar_;
     SpriteMap coins_;
 
+    Dialog dialog_;
     Bozos bozos_;
     std::vector<Bullet> bullets_;
     std::vector<Wave*> waves_;
@@ -139,4 +151,5 @@ class BossScreen : public Screen {
 
     double negotiations_;
     int neg_timer_;
+    size_t dialog_index_;
 };
