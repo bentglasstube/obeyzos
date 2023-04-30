@@ -27,13 +27,8 @@ void MazeChar::stop() {
 void MazeChar::update(const Warehouse& warehouse, unsigned int elapsed) {
   if (state_ == State::Walking) {
     const double delta = speed() * elapsed;
-    double dx = 0, dy = 0;
-    switch (facing_) {
-      case Direction::North: dy = -delta; break;
-      case Direction::East:  dx = delta;  break;
-      case Direction::South: dy = delta;  break;
-      case Direction::West:  dx = -delta; break;
-    }
+    double dx = facing_.dx() * delta;
+    double dy = facing_.dy() * delta;
 
     if (!collision(warehouse, dx, dy)) {
       x_ += dx;

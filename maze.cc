@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "util.h"
-
 Maze::Maze(unsigned long seed, int width, int height) : rng_(seed), width_(width), height_(height) {
   cells_.reserve(width * height);
   for (int i = 0; i < width * height; ++i) {

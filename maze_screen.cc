@@ -1,5 +1,6 @@
 #include "maze_screen.h"
 
+#include "boss_screen.h"
 #include "util.h"
 
 MazeScreen::MazeScreen(GameState gs) :
@@ -69,6 +70,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       switch (c.tile) {
         case Warehouse::Tile::Elevator:
           // TODO go up
+          gs_.workers += union_workers();
           return false;
 
         case Warehouse::Tile::Shelf:
@@ -153,7 +155,7 @@ void MazeScreen::draw(Graphics& graphics) const {
 }
 
 Screen* MazeScreen::next_screen() const {
-  return nullptr;
+  return new BossScreen(gs_);
 }
 
 int MazeScreen::union_workers() const {

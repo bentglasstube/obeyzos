@@ -134,6 +134,7 @@ cc_library(
 cc_library(
   name = "game_state",
   hdrs = ["game_state.h"],
+  deps = ["@libgam//:util"],
 )
 
 cc_library(

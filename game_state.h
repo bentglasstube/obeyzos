@@ -3,7 +3,10 @@
 #include <sstream>
 #include <string>
 
+#include "util.h"
+
 struct GameState {
+  const unsigned long seed = Util::random_seed();
   int workers = 1;
   int time = 9 * 60000; // 9 am
 
