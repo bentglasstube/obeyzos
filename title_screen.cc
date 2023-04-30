@@ -1,6 +1,5 @@
 #include "title_screen.h"
 
-#include "boss_screen.h"
 #include "maze_screen.h"
 
 TitleScreen::TitleScreen() : text_("text.png") {}

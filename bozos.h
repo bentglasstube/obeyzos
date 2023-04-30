@@ -28,9 +28,7 @@ class Bozos {
     void close_mouth() { mouth_open_ = true; }
 
     bool attack_ready() const { return attack_timer_ <= 0; }
-    void reset_attack_cooldown() {
-      attack_timer_  = 10000;
-    }
+    void reset_attack_cooldown() { attack_timer_  = 10000; }
 
   private:
 

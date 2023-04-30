@@ -1,6 +1,6 @@
 #include "maze_screen.h"
 
-#include "boss_screen.h"
+#include "puzzle_screen.h"
 #include "util.h"
 
 MazeScreen::MazeScreen(GameState gs) :
@@ -155,7 +155,7 @@ void MazeScreen::draw(Graphics& graphics) const {
 }
 
 Screen* MazeScreen::next_screen() const {
-  return new BossScreen(gs_);
+  return new PuzzleScreen(gs_);
 }
 
 int MazeScreen::union_workers() const {

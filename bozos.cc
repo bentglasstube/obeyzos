@@ -8,7 +8,8 @@ Bozos::Bozos() :
   eyes_("bozos-eyes.png", 0, 0, 94, 25),
   eyebrows_("bozos-eyebrows.png", 1, 96, 19),
   mouth_("bozos-mouth.png", 1, 67, 30),
-  pos_{0, 0}, timer_(0), attack_timer_(1500)
+  pos_{0, 0}, timer_(0), attack_timer_(3500),
+  mouth_open_(false)
 {}
 
 void Bozos::update(unsigned int elapsed) {
