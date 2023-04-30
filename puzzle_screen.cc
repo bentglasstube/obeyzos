@@ -4,6 +4,7 @@
 
 PuzzleScreen::PuzzleScreen(GameState gs) :
   gs_(gs), rng_(gs.seed),
+  text_("text.png"),
   background_("puzzle-background.png"),
   lights_("puzzle-lights.png", 5, 144, 144),
   digits_("puzzle-digits.png", 11, 20, 37),
@@ -16,6 +17,8 @@ PuzzleScreen::PuzzleScreen(GameState gs) :
 }
 
 bool PuzzleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+  gs_.add_time(elapsed);
+
   if (state_ == State::Playback) {
 
     timer_ -= elapsed;
@@ -62,6 +65,9 @@ void PuzzleScreen::draw(Graphics& graphics) const {
   digits_.draw(graphics, (floor_ > 9 ? 1 : 10), 390, 49);
   digits_.draw(graphics, floor_ % 10, 422, 49);
   lights_.draw(graphics, playing_timer_ > 0 ? playing_ : 0, 176, 147);
+
+  text_.draw(graphics, "Workers: " + std::to_string(gs_.workers), 0, 0);
+  text_.draw(graphics, gs_.clock(), graphics.width(), 0, Text::Alignment::Right);
 }
 
 Screen* PuzzleScreen::next_screen() const {

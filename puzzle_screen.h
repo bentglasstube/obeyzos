@@ -6,6 +6,7 @@
 #include "backdrop.h"
 #include "screen.h"
 #include "spritemap.h"
+#include "text.h"
 
 #include "game_state.h"
 
@@ -26,6 +27,7 @@ class PuzzleScreen : public Screen {
     GameState gs_;
     std::mt19937 rng_;
 
+    Text text_;
     Backdrop background_;
     SpriteMap lights_;
     SpriteMap digits_;
