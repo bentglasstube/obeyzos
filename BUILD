@@ -38,7 +38,9 @@ cc_library(
   ],
   deps = [
     "@libgam//:screen",
+    "@libgam//:spritemap",
     "@libgam//:text",
+    ":bar",
     ":bozos",
     ":buster",
     ":camera",
@@ -54,10 +56,7 @@ cc_library(
   name = "maze",
   srcs = ["maze.cc"],
   hdrs = ["maze.h"],
-  deps = [
-    "@libgam//:util",
-    ":direction",
-  ]
+  deps = [":direction"]
 )
 
 cc_library(
@@ -120,7 +119,7 @@ cc_library(
     ":warehouse",
     ":config",
     ":direction",
-  ]
+  ],
 )
 
 cc_library(
@@ -129,7 +128,7 @@ cc_library(
   hdrs = ["worker.h"],
   deps = [
     ":maze_char",
-  ]
+  ],
 )
 
 cc_library(
@@ -144,7 +143,7 @@ cc_library(
   deps = [
     ":maze_char",
     ":maze_player",
-  ]
+  ],
 )
 
 cc_library(
@@ -156,5 +155,15 @@ cc_library(
     "@libgam//:sprite",
     "@libgam//:spritemap",
     ":config",
-  ]
+  ],
+)
+
+cc_library(
+  name = "bar",
+  srcs = ["bar.cc"],
+  hdrs = ["bar.h"],
+  deps = [
+    "@libgam//:graphics",
+    "@libgam//:spritemap",
+  ],
 )
