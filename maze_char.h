@@ -36,11 +36,12 @@ class MazeChar {
     double x_, y_;
     Direction facing_;
     State state_;
+    SpriteMap sprites_;
     int timer_;
 
     bool collision(const Warehouse& warehouse, double dx, double dy) const;
-    virtual int sprite_number() const;
+    int sprite_number() const;
 
-    virtual SpriteMap sprites() const = 0;
     virtual double speed() const = 0;
+    virtual int sprite_base() const = 0;
 };

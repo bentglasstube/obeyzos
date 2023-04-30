@@ -8,6 +8,7 @@ MazeChar::MazeChar(double x, double y) :
   x_(x), y_(y),
   facing_(Direction::North),
   state_(State::Waiting),
+  sprites_("maze_chars.png", 16, 16, 24),
   timer_(0) {}
 
 void MazeChar::move(Direction dir) {
@@ -41,7 +42,7 @@ void MazeChar::update(const Warehouse& warehouse, unsigned int elapsed) {
 void MazeChar::draw(Graphics& graphics, int xo, int yo) const {
   const int x = x_ - xo - Config::kTileSize / 2;
   const int y = y_ - yo - Config::kTileSize;
-  sprites().draw(graphics, sprite_number(), x, y);
+  sprites_.draw(graphics, sprite_number(), x, y);
 
 #ifndef NDEBUG
   collision_box().draw(graphics, xo, yo, 0xd8ff00ff, false);
@@ -79,7 +80,7 @@ int MazeChar::sprite_number() const {
   if (state_ == State::Walking) {
     d += timer_ / kAnimationTime;
   }
-  return d;
+  return d + sprite_base();
 }
 
 

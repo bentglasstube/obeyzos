@@ -4,9 +4,7 @@
 
 #include "config.h"
 
-MazePlayer::MazePlayer() :
-  MazeChar(Warehouse::pixel_width() / 2, Warehouse::pixel_height() - 8),
-  sprites_("maze_player.png", 4, 16, 24) {}
+MazePlayer::MazePlayer() : MazeChar(Warehouse::pixel_width() / 2, Warehouse::pixel_height() - 8) {}
 
 Warehouse::Cell MazePlayer::interact(const Warehouse& warehouse) const {
   int px = std::floor(x_ / Config::kTileSize);
