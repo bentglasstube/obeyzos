@@ -29,11 +29,13 @@ cc_library(
   srcs = [
     "boss_screen.cc",
     "maze_screen.cc",
+    "puzzle_screen.cc",
     "title_screen.cc",
   ],
   hdrs = [
     "boss_screen.h",
     "maze_screen.h",
+    "puzzle_screen.h",
     "title_screen.h",
   ],
   deps = [
