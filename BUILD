@@ -27,16 +27,19 @@ cc_library(
 cc_library(
   name = "screens",
   srcs = [
-    "title_screen.cc",
+    "boss_screen.cc",
     "maze_screen.cc",
+    "title_screen.cc",
   ],
   hdrs = [
-    "title_screen.h",
+    "boss_screen.h",
     "maze_screen.h",
+    "title_screen.h",
   ],
   deps = [
     "@libgam//:screen",
     "@libgam//:text",
+    ":bozos",
     ":buster",
     ":camera",
     ":dialog",
@@ -141,5 +144,17 @@ cc_library(
   deps = [
     ":maze_char",
     ":maze_player",
+  ]
+)
+
+cc_library(
+  name = "bozos",
+  srcs = ["bozos.cc"],
+  hdrs = ["bozos.h"],
+  deps = [
+    "@libgam//:graphics",
+    "@libgam//:sprite",
+    "@libgam//:spritemap",
+    ":config",
   ]
 )
