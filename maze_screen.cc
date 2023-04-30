@@ -87,7 +87,12 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   }
 
   for (auto& buster : busters_) {
-    buster.update(player_, warehouse_, elapsed);
+    if (warehouse_.box_visible(buster.collision_box())) {
+      buster.chase(player_);
+    } else {
+      buster.stop_chasing();
+    }
+    buster.update(warehouse_, elapsed);
 
     if (buster.collision_box().intersect(player_.collision_box())) {
       // TODO fade out/in
@@ -100,6 +105,9 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       for (auto& worker : workers_) {
         if (flip(rng_) == 1) worker.leave_union();
         worker.set_tile_position(warehouse_.random_open_cell(rng_));
+      }
+      for (auto& buster : busters_) {
+        buster.set_tile_position(warehouse_.random_open_cell(rng_));
       }
     }
   }
