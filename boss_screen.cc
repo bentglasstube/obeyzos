@@ -1,5 +1,7 @@
 #include "boss_screen.h"
 
+#include <algorithm>
+
 #include "config.h"
 
 BossScreen::BossScreen(GameState gs) :
@@ -18,7 +20,7 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
     if (player_.hit(bullet) && !player_.invulnerable()) {
       player_.hurt();
-      if (--gs_.workers == 0) {
+      if (--gs_.workers < 1) {
         // game over
         return false;
       }
@@ -32,11 +34,22 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  // TODO handle bozos attacks
+  bullets_.erase(
+      std::remove_if(
+        bullets_.begin(), bullets_.end(),
+        [](const auto& b) { return b.out_of_bounds(); }),
+      bullets_.end());
+
+  waves_.erase(
+      std::remove_if(
+        waves_.begin(), waves_.end(),
+        [](const auto& w) { return w->done(); }),
+      waves_.end());
+
   if (bozos_.attack_ready()) {
     int roll = std::uniform_int_distribution<int>(1, 10)(rng_);
     if (roll <= 4) {
-      waves_.push_back(new CopperWave{100, 0.01, rng_()});
+      waves_.push_back(new CopperWave{100, 1, rng_()});
     } else if (roll <= 7) {
       waves_.push_back(new SilverWave{100, rng_()});
     } else if (roll <= 9) {
@@ -95,6 +108,14 @@ void BossScreen::Bullet::update(unsigned int elapsed) {
   pos.x += vx * elapsed / 1000.0;
   pos.y += vy * elapsed / 1000.0;
   timer += elapsed;
+}
+
+bool BossScreen::Bullet::out_of_bounds() const {
+  if (pos.x < -10 && vx < 0) return true;
+  if (pos.y < -10 && vy < 0) return true;
+  if (pos.x > kConfig.graphics.width + 10 && vx > 0) return true;
+  if (pos.y > kConfig.graphics.height + 10 && vy > 0) return true;
+  return false;
 }
 
 BossScreen::Bullet BossScreen::CopperWave::fire(const Bozos& bozos) {
@@ -158,9 +179,11 @@ void BossScreen::Player::update(unsigned int elapsed) {
     double dx = facing_.dx() * delta;
     double dy = facing_.dy() * delta;
 
-    // TODO check bounds
     x_ += dx;
     y_ += dy;
+
+    x_ = std::clamp(16.0, x_, kConfig.graphics.width - 16.0);
+    y_ = std::clamp(240.0, y_, kConfig.graphics.height - 32.0);
   }
 
   if (iframes_ > 0) iframes_ -= elapsed;

@@ -37,6 +37,7 @@ class BossScreen : public Screen {
       int timer = 0;
 
       void update(unsigned int elapsed);
+      bool out_of_bounds() const;
     };
 
     class Wave {
@@ -59,7 +60,7 @@ class BossScreen : public Screen {
     class CopperWave : public Wave {
       // sprays from nose
       public:
-        CopperWave(int count, double spread, unsigned long seed) : Wave(10, count), spread_(spread), rng_(seed) {}
+        CopperWave(int count, double spread, unsigned long seed) : Wave(5, count), spread_(spread), rng_(seed) {}
         Bullet fire(const Bozos& bozos);
 
       private:

@@ -5,7 +5,7 @@
 Bozos::Bozos() :
   face_("bozos-face.png", 0, 0, 160, 192),
   shine_("bozos-shine.png", 0, 0, 51, 29),
-  eyes_("bozos-eyes.png", 0, 0, 94, 25),
+  eyes_("bozos-eyes.png", 0, 0, 32, 16),
   eyebrows_("bozos-eyebrows.png", 1, 96, 19),
   mouth_("bozos-mouth.png", 1, 67, 30),
   pos_{0, 0}, timer_(0), attack_timer_(3500),
@@ -26,7 +26,8 @@ void Bozos::update(unsigned int elapsed) {
 }
 
 void Bozos::draw(Graphics& graphics) const {
-  eyes_.draw(graphics, pos_.x + 24, pos_.y + 80);
+  eyes_.draw(graphics, pos_.x + 24, pos_.y + 88);
+  eyes_.draw(graphics, pos_.x + 79, pos_.y + 84);
   face_.draw(graphics, pos_.x, pos_.y);
   shine_.draw(graphics, pos_.x + 28, pos_.y + 12);
 

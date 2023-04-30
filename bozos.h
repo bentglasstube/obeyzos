@@ -25,10 +25,10 @@ class Bozos {
     }
 
     void open_mouth() { mouth_open_ = true; }
-    void close_mouth() { mouth_open_ = true; }
+    void close_mouth() { mouth_open_ = false; }
 
     bool attack_ready() const { return attack_timer_ <= 0; }
-    void reset_attack_cooldown() { attack_timer_  = 10000; }
+    void reset_attack_cooldown() { attack_timer_ = 5000; }
 
   private:
 

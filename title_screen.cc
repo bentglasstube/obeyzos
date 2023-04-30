@@ -1,6 +1,8 @@
 #include "title_screen.h"
 
+#include "boss_screen.h"
 #include "maze_screen.h"
+#include "puzzle_screen.h"
 
 TitleScreen::TitleScreen() : text_("text.png") {}
 
@@ -13,5 +15,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new MazeScreen(GameState());
+  return new BossScreen(GameState());
 }
