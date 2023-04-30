@@ -80,11 +80,10 @@ class BossScreen : public Screen {
     class GoldWave : public Wave {
       // shoots "lasers" from eyes
       public:
-        GoldWave(int count) : Wave(40, count), side_(false), angle_(0) {}
+        GoldWave(int count) : Wave(40, count), side_(false) {}
         Bullet fire(const Bozos& bozos);
       private:
         bool side_;
-        double angle_;
     };
 
     class EmeraldWave : public Wave {
