@@ -37,6 +37,7 @@ cc_library(
   deps = [
     "@libgam//:screen",
     "@libgam//:text",
+    ":buster",
     ":camera",
     ":dialog",
     ":game_state",
@@ -131,4 +132,14 @@ cc_library(
 cc_library(
   name = "game_state",
   hdrs = ["game_state.h"],
+)
+
+cc_library(
+  name = "buster",
+  srcs = ["buster.cc"],
+  hdrs = ["buster.h"],
+  deps = [
+    ":maze_char",
+    ":maze_player",
+  ]
 )

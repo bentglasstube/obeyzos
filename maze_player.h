@@ -10,6 +10,7 @@ class MazePlayer : public MazeChar {
 
     Warehouse::Cell interact(const Warehouse& warehouse) const;
     Rect target() const;
+    void reset_position();
 
   private:
 

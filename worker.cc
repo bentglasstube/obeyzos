@@ -1,18 +1,17 @@
 #include "worker.h"
 
-Worker::Worker(unsigned long seed, double x, double y) :
-  MazeChar(x, y),
-  rng_(seed), wait_timer_(0),
+Worker::Worker(unsigned long seed, std::pair<int, int> tile_pos) :
+  MazeChar(tile_pos),
+  rng_(seed), wander_timer_(0),
   visual_(std::uniform_int_distribution<int>(0, 1)(rng_)),
   unionized_(false) {}
 
 void Worker::update(const Warehouse& warehouse, unsigned int elapsed) {
-  if (wait_timer_ <= 0) {
+  if (wander_timer_ <= 0) {
     move(Direction::random(rng_));
-    wait_timer_ = walk_time();
+    wander_timer_ = wander_time();
   } else {
-    wait_timer_ -= elapsed;
+    wander_timer_ -= elapsed;
   }
-
   MazeChar::update(warehouse, elapsed);
 }

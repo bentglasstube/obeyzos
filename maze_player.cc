@@ -20,6 +20,11 @@ Warehouse::Cell MazePlayer::interact(const Warehouse& warehouse) const {
   return warehouse.get_cell(px, py);
 }
 
+void MazePlayer::reset_position() {
+  x_ = Warehouse::pixel_width() / 2;
+  y_ = Warehouse::pixel_height() - 8;
+}
+
 Rect MazePlayer::target() const {
   const Rect box = draw_box();
   return Rect{

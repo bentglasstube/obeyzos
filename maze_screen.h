@@ -6,6 +6,7 @@
 #include "screen.h"
 #include "text.h"
 
+#include "buster.h"
 #include "camera.h"
 #include "dialog.h"
 #include "game_state.h"
@@ -25,6 +26,9 @@ class MazeScreen : public Screen {
 
   private:
 
+    static constexpr int kNumWorkers = 10;
+    static constexpr int kNumBusters = 3;
+
     GameState gs_;
     std::mt19937 rng_;
 
@@ -38,6 +42,7 @@ class MazeScreen : public Screen {
     Camera camera_;
     Dialog dialog_;
     std::vector<Worker> workers_;
+    std::vector<Buster> busters_;
 
     int union_workers() const;
 };

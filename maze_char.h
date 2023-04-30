@@ -13,6 +13,7 @@ class MazeChar {
     enum class State { Waiting, Walking };
 
     MazeChar(double x, double y);
+    MazeChar(std::pair<int, int> tile_pos);
     virtual ~MazeChar() {}
 
     void move(Direction dir);
@@ -27,7 +28,8 @@ class MazeChar {
     double x() const { return x_; }
     double y() const { return y_; }
 
-    void set_position(int x, int y);
+    void set_position(double x, double y);
+    void set_tile_position(std::pair<int, int> tile_position);
 
   protected:
 

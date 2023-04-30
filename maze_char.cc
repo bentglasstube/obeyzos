@@ -11,6 +11,10 @@ MazeChar::MazeChar(double x, double y) :
   sprites_("maze_chars.png", 16, 16, 24),
   timer_(0) {}
 
+MazeChar::MazeChar(std::pair<int, int> tile_pos) : MazeChar(0, 0) {
+  set_tile_position(tile_pos);
+}
+
 void MazeChar::move(Direction dir) {
   state_ = State::Walking;
   facing_ = dir;
@@ -65,10 +69,17 @@ Rect MazeChar::collision_box() const {
     y_ + Config::kTileSize / 2 - 2 };
 }
 
-void MazeChar::set_position(int x, int y) {
+void MazeChar::set_position(double x, double y) {
   x_ = x;
   y_ = y;
   stop();
+}
+
+void MazeChar::set_tile_position(std::pair<int, int> tile_pos) {
+  set_position(
+    tile_pos.first * Config::kTileSize + Config::kTileSize / 2,
+     tile_pos.second * Config::kTileSize + Config::kTileSize / 2
+  );
 }
 
 bool MazeChar::collision(const Warehouse& warehouse, double dx, double dy) const {
@@ -82,5 +93,3 @@ int MazeChar::sprite_number() const {
   }
   return d + sprite_base();
 }
-
-
