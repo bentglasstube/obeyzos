@@ -9,7 +9,7 @@ PuzzleScreen::PuzzleScreen(GameState gs) :
   lights_("puzzle-lights.png", 5, 144, 144),
   digits_("puzzle-digits.png", 11, 20, 37),
   crosses_("puzzle-strikes.png", 4, 13, 41),
-  state_(State::Playback),
+  state_(State::Intro),
   floor_(1), strikes_(0), index_(0),
   timer_(0), playing_(0), playing_timer_(0)
 {
@@ -19,7 +19,15 @@ PuzzleScreen::PuzzleScreen(GameState gs) :
 bool PuzzleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
-  if (state_ == State::Playback) {
+  if (dialog_) {
+    dialog_.update(input, elapsed);
+    return true;
+  }
+
+  if (state_ == State::Intro) {
+    dialog_.set_message("Looks like the badge reader is broken.  I'll\nhave to use the \"foolproof\" obedience\nbased security lock instead.");
+    playback_mode();
+  } else if (state_ == State::Playback) {
 
     timer_ -= elapsed;
     if (timer_ < 0) {
@@ -68,6 +76,8 @@ void PuzzleScreen::draw(Graphics& graphics) const {
 
   text_.draw(graphics, "Workers: " + std::to_string(gs_.workers), 0, 0);
   text_.draw(graphics, gs_.clock(), graphics.width(), 0, Text::Alignment::Right);
+
+  if (dialog_) dialog_.draw(graphics);
 }
 
 Screen* PuzzleScreen::next_screen() const {

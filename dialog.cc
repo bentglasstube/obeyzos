@@ -10,11 +10,19 @@ void Dialog::set_message(const std::string& message) {
   index_ = 0;
 }
 
-void Dialog::update(unsigned int elapsed) {
+void Dialog::update(const Input& input, unsigned int elapsed) {
   if (!done()) {
     timer_ += elapsed;
     if (timer_ > kRate) {
       ++index_;
+    }
+  }
+
+  if (input.key_pressed(Input::Button::A)) {
+    if (done()) {
+      dismiss();
+    } else {
+      finish();
     }
   }
 }

@@ -22,15 +22,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
   if (dialog_) {
-    dialog_.update(elapsed);
-    if (input.key_pressed(Input::Button::A)) {
-      if (dialog_.done()) {
-        dialog_.dismiss();
-      } else {
-        dialog_.finish();
-      }
-    }
-
+    dialog_.update(input, elapsed);
     return true;
   }
 

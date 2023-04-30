@@ -8,6 +8,7 @@
 #include "spritemap.h"
 #include "text.h"
 
+#include "dialog.h"
 #include "game_state.h"
 
 class PuzzleScreen : public Screen {
@@ -22,7 +23,7 @@ class PuzzleScreen : public Screen {
 
   private:
 
-    enum class State { Playback, Input };
+    enum class State { Intro, Playback, Input };
 
     GameState gs_;
     std::mt19937 rng_;
@@ -35,6 +36,7 @@ class PuzzleScreen : public Screen {
 
     std::array<int, 12> sequence_;
     State state_;
+    Dialog dialog_;
     size_t floor_, strikes_, index_;
     int timer_, playing_, playing_timer_;
 

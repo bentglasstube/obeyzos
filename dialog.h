@@ -3,6 +3,7 @@
 #include <string>
 
 #include "box.h"
+#include "input.h"
 #include "text.h"
 
 #include "config.h"
@@ -13,7 +14,7 @@ class Dialog {
     Dialog();
 
     void set_message(const std::string& message);
-    void update(unsigned int elapsed);
+    void update(const Input& input, unsigned int elapsed);
     void draw(Graphics& graphics) const;
     bool done() const { return index_ >= message_.length(); }
     void finish() { index_ = message_.length(); }
