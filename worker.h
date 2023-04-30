@@ -25,6 +25,6 @@ class Worker : public MazeChar {
 
     std::mt19937 rng_;
     int wait_timer_;
-    int visual_;
+    const int visual_;
     bool unionized_;
 };
