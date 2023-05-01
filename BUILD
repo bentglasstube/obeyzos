@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
-  name = "ld53",
+  name = "obeyzos",
   data = ["//content"],
   linkopts = [
     "-lSDL2",
@@ -11,6 +11,7 @@ cc_binary(
   srcs = ["main.cc"],
   deps = [
     "@libgam//:game",
+    ":config",
     ":screens",
   ],
 )

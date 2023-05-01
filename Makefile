@@ -3,7 +3,7 @@ ifeq ($(UNAME), Windows)
 	CROSS=x86_64-w64-mingw32.static-
 endif
 
-NAME=ld53
+NAME=obeyzos
 GAMDEPS=audio backdrop box game graphics input rect screen sprite spritemap text util
 
 SOURCES=$(wildcard *.cc) $(patsubst %,gam/%.cc,$(GAMDEPS))

@@ -5,11 +5,11 @@
     <key>CFBundleExecutable</key>
     <string>launcher</string>
     <key>CFBundleIdentifier</key>
-    <string>org.eatabrick.ld53</string>
+    <string>org.eatabrick.obeyzos</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>ld53</string>
+    <string>obeyzos</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
   </dict>
