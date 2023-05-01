@@ -19,6 +19,10 @@ PuzzleScreen::PuzzleScreen(GameState gs) :
 bool PuzzleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
+#ifndef NDEBUG
+  if (input.key_pressed(Input::Button::Select)) floor_ = 20;
+#endif
+
   if (dialog_) {
     dialog_.update(input, elapsed);
     return true;

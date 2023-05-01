@@ -123,6 +123,8 @@ class BossScreen : public Screen {
         void hurt();
 
         Rect hit_box() const { return { x_ - 5, y_ - 17, x_ + 6, y_ - 3 }; }
+        double x() { return x_; }
+        double y() { return y_; }
 
       private:
 
@@ -137,19 +139,23 @@ class BossScreen : public Screen {
         SpriteMap sprites_;
     };
 
+    struct Bottle { double x, y; };
+
     GameState gs_;
     std::mt19937 rng_;
     Text text_;
     Bar bar_;
     SpriteMap coins_;
+    Sprite bottle_;
 
     Dialog dialog_;
     Bozos bozos_;
     std::vector<Bullet> bullets_;
     std::vector<Wave*> waves_;
+    std::vector<Bottle> bottles_;
     Player player_;
 
     double negotiations_;
-    int neg_timer_;
+    int neg_timer_, bottle_cooldown_;
     size_t dialog_index_;
 };

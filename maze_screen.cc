@@ -19,7 +19,7 @@ MazeScreen::MazeScreen(GameState gs) :
   }
 }
 
-bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
   const int px = std::floor(player_.x() / Config::kTileSize);
@@ -61,6 +61,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
           dialog_.set_message("I'm already in the union.");
         } else {
           dialog_.set_message("Yes, I'd love to join the union.");
+          audio.play_sample("join.wav");
           worker.unionize();
         }
         worker_found = true;
@@ -93,6 +94,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   for (auto& buster : busters_) {
     if (warehouse_.box_visible(buster.collision_box())) {
+      audio.play_sample("alert.wav");
       buster.chase(player_);
     } else {
       buster.stop_chasing();

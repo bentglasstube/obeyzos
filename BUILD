@@ -31,12 +31,14 @@ cc_library(
     "maze_screen.cc",
     "puzzle_screen.cc",
     "title_screen.cc",
+    "win_screen.cc",
   ],
   hdrs = [
     "boss_screen.h",
     "maze_screen.h",
     "puzzle_screen.h",
     "title_screen.h",
+    "win_screen.h",
   ],
   deps = [
     "@libgam//:backdrop",
@@ -156,6 +158,7 @@ cc_library(
   hdrs = ["bozos.h"],
   deps = [
     "@libgam//:graphics",
+    "@libgam//:rect",
     "@libgam//:sprite",
     "@libgam//:spritemap",
     ":config",

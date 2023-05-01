@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics.h"
+#include "rect.h"
 #include "sprite.h"
 #include "spritemap.h"
 
@@ -29,6 +30,12 @@ class Bozos {
 
     bool attack_ready() const { return attack_timer_ <= 0; }
     void reset_attack_cooldown() { attack_timer_ = 5000; }
+    Rect hit_box() const {
+      return { pos_.x + 32, pos_.y + 16, pos_.x + 112, pos_.y + 80 };
+    }
+
+    void hurt() { hurt_timer_ = 2500; }
+    bool is_hurt() const { return hurt_timer_ > 0; }
 
   private:
 
@@ -42,11 +49,15 @@ class Bozos {
     SpriteMap mouth_;
 
     Point pos_;
-    int timer_, attack_timer_;
+    int timer_, attack_timer_, hurt_timer_;
     bool mouth_open_;
 
     int mouth_sprite() const {
       if (mouth_open_) return 2;
       return attack_timer_ < 500 ? 0 : 1;
+    }
+
+    int eyebrow_sprite() const {
+      return is_hurt() ? 1 : 0;
     }
 };

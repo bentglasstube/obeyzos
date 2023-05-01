@@ -27,7 +27,7 @@ void Dialog::update(const Input& input, unsigned int elapsed) {
   }
 }
 
-void Dialog::draw(Graphics& graphics) const {
-  box_.draw(graphics, 2 * kPadding, kPadding, graphics.width() - 4 * kPadding, kHeight);
+void Dialog::draw(Graphics& graphics, bool include_box) const {
+  if (include_box) box_.draw(graphics, 2 * kPadding, kPadding, graphics.width() - 4 * kPadding, kHeight);
   text_.draw(graphics, message_.substr(0, index_), 80, 48);
 }

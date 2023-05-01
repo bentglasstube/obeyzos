@@ -3,17 +3,20 @@
 #include <algorithm>
 
 #include "config.h"
+#include "title_screen.h"
+#include "win_screen.h"
 
 BossScreen::BossScreen(GameState gs) :
   gs_(gs), rng_(gs.seed),
   text_("text.png"),
   bar_(1000.0, kConfig.graphics.width),
   coins_("coins.png", 4, 16, 16),
-  negotiations_(0), neg_timer_(0),
+  bottle_("bottle.png", 0, 0, 4, 16),
+  negotiations_(0), neg_timer_(0), bottle_cooldown_(0),
   dialog_index_(0)
 {}
 
-bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool BossScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
   if (dialog_) {
@@ -24,6 +27,22 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       dialog_.set_message(kIntroText[dialog_index_]);
       ++dialog_index_;
       return true;
+    }
+  }
+
+#ifndef NDEBUG
+  if (input.key_pressed(Input::Button::Select)) {
+    negotiations_ += 1000.0;
+  }
+#endif
+
+  for (auto& bottle : bottles_) {
+    bottle.y -= 0.25 * elapsed;
+    if (bozos_.hit_box().contains(bottle.x, bottle.y)) {
+      audio.play_sample("oof.wav");
+      bozos_.hurt();
+      negotiations_ += 10;
+      bottle.y = -100;
     }
   }
 
@@ -38,6 +57,11 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
         return false;
       }
     }
+  }
+
+  if (negotiations_ > 1000.0) {
+    // you win
+    return false;
   }
 
   for (auto wave : waves_) {
@@ -63,12 +87,16 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     int roll = std::uniform_int_distribution<int>(1, 10)(rng_);
     if (roll <= 4) {
       waves_.push_back(new CopperWave{rng_()});
+      audio.play_sample("nose.wav");
     } else if (roll <= 7) {
       waves_.push_back(new SilverWave{rng_()});
+      audio.play_sample("coin.wav");
     } else if (roll <= 9) {
       waves_.push_back(new GoldWave{});
+      audio.play_sample("lasers.wav");
     } else {
       waves_.push_back(new EmeraldWave{rng_()});
+      audio.play_sample("laugh.wav");
       bozos_.open_mouth();
     }
 
@@ -89,6 +117,15 @@ bool BossScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     player_.stop();
   }
 
+  if (bottle_cooldown_ < 0) {
+    if (input.key_pressed(Input::Button::A)) {
+      bottles_.push_back(Bottle{player_.x(), player_.y() - 20});
+      bottle_cooldown_ = 1500;
+    }
+  } else {
+    bottle_cooldown_ -= elapsed;
+  }
+
   player_.update(elapsed);
 
   neg_timer_ += elapsed;
@@ -107,6 +144,10 @@ void BossScreen::draw(Graphics& graphics) const {
     coins_.draw(graphics, (int)bullet.color * 4 + (bullet.timer / 100) % 4, bullet.pos.x - 8, bullet.pos.y - 8);
   }
 
+  for (const auto& bottle : bottles_) {
+    bottle_.draw(graphics, bottle.x, bottle.y);
+  }
+
   text_.draw(graphics, "Workers: " + std::to_string(gs_.workers), 0, 0);
   text_.draw(graphics, gs_.clock(), graphics.width(), 0, Text::Alignment::Right);
   text_.draw(graphics, "Negotiations", graphics.width() / 2, graphics.height() - 32, Text::Alignment::Center);
@@ -116,7 +157,11 @@ void BossScreen::draw(Graphics& graphics) const {
 }
 
 Screen* BossScreen::next_screen() const {
-  return nullptr;
+  if (gs_.workers > 0) {
+    return new WinScreen(gs_);
+  } else {
+    return new TitleScreen();
+  }
 }
 
 void BossScreen::Bullet::update(unsigned int elapsed) {
@@ -184,6 +229,8 @@ BossScreen::Bullet BossScreen::EmeraldWave::fire(const Bozos& bozos) {
 BossScreen::Player::Player() :
   x_(kConfig.graphics.width / 2 - 16),
   y_(kConfig.graphics.height - 64),
+  moving_(false), facing_(Direction::North),
+  iframes_(0), timer_(0),
   sprites_("unionman.png", 3, 32, 64)
 {}
 

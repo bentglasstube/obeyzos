@@ -14,7 +14,12 @@ Bozos::Bozos() :
 
 void Bozos::update(unsigned int elapsed) {
   timer_ += elapsed;
-  attack_timer_ -= elapsed;
+
+  if (hurt_timer_ > 0) {
+    hurt_timer_ -= elapsed;
+  } else {
+    attack_timer_ -= elapsed;
+  }
 
   const double t = timer_ / 1000.0;
   const double cos = std::cos(t);
@@ -31,6 +36,9 @@ void Bozos::draw(Graphics& graphics) const {
   face_.draw(graphics, pos_.x, pos_.y);
   shine_.draw(graphics, pos_.x + 28, pos_.y + 12);
 
-  eyebrows_.draw(graphics, 0, pos_.x + 23, pos_.y + 73);
+  eyebrows_.draw(graphics, eyebrow_sprite(), pos_.x + 23, pos_.y + 73);
   mouth_.draw(graphics, mouth_sprite(), pos_.x + 43, pos_.y + 139);
+#ifndef NDEBUG
+  hit_box().draw(graphics, 0, 0, 0xd8ff00ff, false);
+#endif
 }

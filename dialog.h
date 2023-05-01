@@ -15,7 +15,7 @@ class Dialog {
 
     void set_message(const std::string& message);
     void update(const Input& input, unsigned int elapsed);
-    void draw(Graphics& graphics) const;
+    void draw(Graphics& graphics, bool include_box=true) const;
     bool done() const { return index_ >= message_.length(); }
     void finish() { index_ = message_.length(); }
     void dismiss() { message_ = ""; }
