@@ -20,7 +20,7 @@ struct GameState {
     std::stringstream ss;
     ss << (hour > 12 ? hour - 12 : hour) << ":";
     ss << (minute < 10 ? "0" : "") << minute;
-    ss << " " << (hour > 12 ? "pm" : "am");
+    ss << " " << (hour > 11 ? "pm" : "am");
     return ss.str();
   }
 };
